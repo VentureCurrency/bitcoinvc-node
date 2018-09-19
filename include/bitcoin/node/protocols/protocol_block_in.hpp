@@ -41,7 +41,11 @@ public:
         blockchain::safe_chain& chain);
 
     /// Start the protocol.
-    virtual void start();
+    void start() override;
+
+protected:
+    // Expose polymorphic start method from base.
+    using network::protocol_timer::start;
 
 private:
     static void report(const chain::block& block, size_t height);
@@ -71,7 +75,6 @@ private:
     const bool blocks_from_peer_;
     const bool require_witness_;
     const bool peer_witness_;
-    const bc::settings& bitcoin_settings_;
 };
 
 } // namespace node

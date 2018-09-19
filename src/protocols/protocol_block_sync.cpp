@@ -48,7 +48,6 @@ protocol_block_sync::protocol_block_sync(full_node& node, channel::ptr channel,
   : protocol_timer(node, channel, true, NAME),
     chain_(chain),
     reservation_(node.get_reservation()),
-    bitcoin_settings_(node.bitcoin_settings()),
     CONSTRUCT_TRACK(protocol_block_sync)
 {
 }
@@ -139,14 +138,14 @@ bool protocol_block_sync::handle_receive_block(const code& ec,
     // If any block fails validation then reindexation will be triggered.
     // Successful block validation with sufficient height triggers block reorg.
     // However the reorgnization notification cannot be sent from here.
-    const auto code = reservation_->import(chain_, message, height);
+    const auto error_code = reservation_->import(chain_, message, height);
 
-    if (code)
+    if (error_code)
     {
         LOG_FATAL(LOG_NODE)
             << "Failure importing block for slot (" << reservation_->slot()
-            << "), store is now corrupted: " << ec.message();
-        stop(code);
+            << "), store is now corrupted: " << error_code.message();
+        stop(error_code);
         return false;
     }
 

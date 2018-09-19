@@ -36,8 +36,7 @@ using namespace bc::network;
 using namespace std::placeholders;
 
 session_manual::session_manual(full_node& network, safe_chain& chain)
-    : session<network::session_manual>(network, true,
-        network.bitcoin_settings()),
+  : session<network::session_manual>(network, true),
     chain_(chain),
     CONSTRUCT_TRACK(node::session_manual)
 {
@@ -59,9 +58,9 @@ void session_manual::attach_protocols(channel::ptr channel)
         attach<protocol_header_in>(channel, chain_)->start();
 
     attach<protocol_block_sync>(channel, chain_)->start();
-    attach<protocol_block_out>(channel, chain_)->start();
-    attach<protocol_transaction_in>(channel, chain_)->start();
-    attach<protocol_transaction_out>(channel, chain_)->start();
+    ////attach<protocol_block_out>(channel, chain_)->start();
+    ////attach<protocol_transaction_in>(channel, chain_)->start();
+    ////attach<protocol_transaction_out>(channel, chain_)->start();
     attach<protocol_address_31402>(channel)->start();
 }
 
